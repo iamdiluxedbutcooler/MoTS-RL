@@ -1,0 +1,19 @@
+env_name: "mo-hopper-v4"
+policy_type: "sac"
+total_timesteps: 1000000
+num_seeds: 20
+lr: 0.0003
+gamma: 0.99
+lambda_kl: 0.01
+window_size: 1000
+
+alpha: [0.9, 0.8, 0.95, 0.7]
+beta: [0.1, 0.2, 0.05, 0.3]
+
+ego_mode: "mlp"
+num_experts: 3
+hidden_dim: 64
+
+device: "cpu"
+log_dir: "results/stage2/mo_hopper"
+use_wandb: false

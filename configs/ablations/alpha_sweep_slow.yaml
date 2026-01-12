@@ -1,0 +1,21 @@
+env_name: "Hopper-v4"
+policy_type: "sac"
+total_timesteps: 500000
+num_seeds: 20
+lr: 0.0003
+gamma: 0.99
+lambda_kl: 0.01
+window_size: 1000
+
+alpha: [0.5, 0.5, 0.5, 0.5]
+beta: [0.5, 0.5, 0.5, 0.5]
+
+ego_mode: "mlp"
+num_experts: 3
+hidden_dim: 64
+
+ablation: "alpha_sweep_slow"
+
+device: "cpu"
+log_dir: "results/ablations/alpha_sweep_slow"
+use_wandb: false
