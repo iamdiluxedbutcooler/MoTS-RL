@@ -1,7 +1,5 @@
 # Map-of-the-Soul Reinforcement Learning (MoTS-RL)
 
-A publication-ready PyTorch implementation of the Map-of-the-Soul reinforcement learning framework, incorporating affective dynamics, archetypal modulators, and multi-expert policy integration.
-
 ## Overview
 
 MoTS-RL extends traditional RL with a four-dimensional affective state vector that influences learning through:
@@ -166,21 +164,6 @@ After running experiments and evaluation:
 - `results/figures/ablations_heatmap.png`: Ablation study
 - `results/figures/umap_clusters.png`: Affective state clusters
 
-## Citation
-
-```bibtex
-@article{mots-rl-2026,
-  title={Map-of-the-Soul: Affective Dynamics in Reinforcement Learning},
-  author={Anonymous},
-  journal={AAAI},
-  year={2026}
-}
-```
-
 ## License
 
 MIT License
-
-## Remote Repository
-
-https://github.com/iamdiluxedbutcooler/MoTS-RL
