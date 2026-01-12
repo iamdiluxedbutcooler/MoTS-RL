@@ -1,0 +1,12 @@
+env_name: "CartPole-v1"
+policy_type: "ppo"
+total_timesteps: 100000
+num_seeds: 20
+lr: 0.0003
+gamma: 0.99
+
+baseline_type: "vanilla"
+
+device: "cpu"
+log_dir: "results/baselines/vanilla"
+use_wandb: false

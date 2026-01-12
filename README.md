@@ -35,22 +35,27 @@ mots_rl/
 ├── core.py                # CoreAffectiveDynamics
 ├── modulators/            # Persona, Shadow, Ego, Self-regulation
 ├── policy/                # PPO and SAC policy wrappers
-├── trainers/              # Training loops
+├── trainers/              # Training loops with robustness mechanisms
+├── baselines/             # Baseline implementations (Vanilla, ICM, RND, RL², etc.)
+├── envs/                  # Diagnostic environments
 └── utils/                 # Replay buffer, logging
 
 configs/                   # Hydra configuration files
-├── stage1/                # Diagnostic experiments
-├── stage2/                # Single-agent tasks
-├── stage3/                # Multi-agent tasks
-├── robustness/            # Robustness tests
-└── ablations/             # Ablation studies
+├── stage1/                # Diagnostic experiments (4 configs)
+├── stage2/                # Single-agent tasks (4 configs)
+├── stage3/                # Multi-agent tasks (4 configs)
+├── robustness/            # Robustness tests (5 configs)
+├── ablations/             # Ablation studies (9 configs)
+├── sensitivity/           # Alpha parameter sensitivity (5 configs)
+└── baselines/             # Baseline comparisons (6 configs)
 
 scripts/
-├── train.py               # Main training script
+├── train.py               # Main training script (supports baselines)
 ├── evaluate.py            # Evaluation and plotting
 ├── eval_boundedness.py    # Boundedness verification
 ├── eval_cluster.py        # Affective state clustering
-└── eval_counterfactual.py # Counterfactual analysis
+├── eval_counterfactual.py # Counterfactual analysis
+└── compare_baselines.py   # Statistical baseline comparison
 ```
 
 ## Quick Start
@@ -135,6 +140,21 @@ python -m pytest tests/
 - `alpha_sweep_fast.yaml`: Fast dynamics (α≈0.99)
 - `alpha_sweep_slow.yaml`: Slow dynamics (α≈0.5)
 
+### Sensitivity Analysis (5 configs)
+- `alpha_080.yaml`: α = 0.80
+- `alpha_085.yaml`: α = 0.85
+- `alpha_090.yaml`: α = 0.90 (default)
+- `alpha_095.yaml`: α = 0.95
+- `alpha_099.yaml`: α = 0.99
+
+### Baselines (6 configs)
+- `vanilla.yaml`: Standard PPO/SAC (B1)
+- `vanilla_plus.yaml`: Parameter-matched baseline (B2)
+- `icm.yaml`: Intrinsic Curiosity Module (B3)
+- `rnd.yaml`: Random Network Distillation (B4)
+- `dim_affect.yaml`: 2D valence-arousal only (B5)
+- `rl2.yaml`: Meta-RL baseline (B6)
+
 ## Core Algorithm
 
 The affective state evolves as:
@@ -157,12 +177,43 @@ Policy mixture:
 ## Generated Figures
 
 After running experiments and evaluation:
-- `results/figures/stage1_core.png`: Diagnostic plots
-- `results/figures/stage2_learning.png`: Learning curves
-- `results/figures/stage3_social.png`: Multi-agent analysis
-- `results/figures/robustness_shift.png`: Robustness results
-- `results/figures/ablations_heatmap.png`: Ablation study
-- `results/figures/umap_clusters.png`: Affective state clusters
+- `results/figures/stage1_core.png`: Diagnostic plots (boundedness, recovery, timescale, coupling)
+- `results/figures/stage2_learning.png`: Single-agent learning curves
+- `results/figures/stage3_social.png`: Multi-agent cooperation analysis
+- `results/figures/robustness_shift.png`: Robustness under distribution shift
+- `results/figures/ablations_heatmap.png`: Ablation study heatmap
+- `results/figures/umap_clusters.png`: Affective state clusters (UMAP)
+- `results/figures/baseline_comparison.png`: Statistical comparison with all 6 baselines
+
+## Key Features
+
+### Robustness Mechanisms
+The trainers now support:
+- **Reward Swap** (R1): Mid-training reward sign flip
+- **Observation Noise** (R3): Gaussian noise injection
+- **Action Dropout** (R4): Random action masking
+- **Partner Swap** (R2): Multi-agent partner policy change (planned)
+- **Zero-shot Transfer** (R5): Cross-task evaluation (planned)
+
+### Ablation Controls
+- `use_persona`: Enable/disable persona modulator
+- `use_shadow`: Enable/disable shadow modulator
+- `fixed_ego_weights`: Fixed expert arbitration weights
+- `random_affect`: Random affect updates (control condition)
+
+### Diagnostic Environments
+Custom environments for theoretical validation:
+- `diagnostic_boundedness`: Tests boundedness guarantees
+- `diagnostic_recovery`: Tests recovery dynamics
+- `diagnostic_timescale`: Tests temporal characteristics
+- `diagnostic_coupled`: Tests cross-dimensional coupling
+
+### Statistical Analysis
+The `compare_baselines.py` script provides:
+- Mann-Whitney U tests for all baseline comparisons
+- Effect sizes (rank-biserial correlation)
+- Significance annotations on plots
+- Detailed statistical reports
 
 ## License
 

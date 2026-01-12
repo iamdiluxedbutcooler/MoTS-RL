@@ -58,16 +58,47 @@ class PPOTrainer:
         affect_history = []
         weight_history = []
         
+        reward_swap = self.config.get("reward_swap", False)
+        swap_timestep = self.config.get("swap_timestep", total_timesteps // 2)
+        obs_noise_std = self.config.get("obs_noise_std", 0.0)
+        action_dropout = self.config.get("action_dropout", 0.0)
+        
+        use_persona = self.config.get("use_persona", True)
+        use_shadow = self.config.get("use_shadow", True)
+        fixed_ego_weights = self.config.get("fixed_ego_weights", None)
+        random_affect = self.config.get("random_affect", False)
+        
         for step in range(total_timesteps):
+            if reward_swap and step == swap_timestep:
+                print(f"Reward swap triggered at step {step}")
+            
+            obs_noisy = obs.copy() if isinstance(obs, np.ndarray) else obs
+            if obs_noise_std > 0:
+                noise = np.random.normal(0, obs_noise_std, size=obs_noisy.shape)
+                obs_noisy = obs_noisy + noise
+            
             affect_state = self.core.get_state()
             
-            action, weights = self.policy.predict(obs, affect_state, deterministic=False)
+            if random_affect:
+                affect_state = torch.randn_like(affect_state)
+            
+            if fixed_ego_weights is not None:
+                weights = torch.tensor(fixed_ego_weights, dtype=torch.float32, device=self.device)
+                action, _ = self.policy.predict(obs_noisy, affect_state, deterministic=False)
+            else:
+                action, weights = self.policy.predict(obs_noisy, affect_state, deterministic=False)
+            
+            if action_dropout > 0 and np.random.rand() < action_dropout:
+                action = self.env.action_space.sample()
             
             next_obs, reward, terminated, truncated, info = self.env.step(action)
             done = terminated or truncated
             
-            persona_mod = self.persona(affect_state)
-            shadow_mod = self.shadow(affect_state)
+            if reward_swap and step >= swap_timestep:
+                reward = -reward
+            
+            persona_mod = self.persona(affect_state) if use_persona else torch.tensor(1.0)
+            shadow_mod = self.shadow(affect_state) if use_shadow else torch.tensor(1.0)
             
             modulated_reward = reward * persona_mod.item() * shadow_mod.item()
             

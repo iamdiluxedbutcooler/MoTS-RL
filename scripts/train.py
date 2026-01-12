@@ -15,6 +15,12 @@ from mots_rl.policy.sac_policy import MoTSSACPolicy
 from mots_rl.trainers.ppo_trainer import PPOTrainer
 from mots_rl.trainers.sac_trainer import SACTrainer
 from mots_rl.utils.logging import Logger
+from mots_rl.baselines.vanilla import VanillaRLBaseline
+from mots_rl.baselines.vanilla_plus import VanillaPlusBaseline
+from mots_rl.baselines.icm import ICMBaseline
+from mots_rl.baselines.rnd import RNDBaseline
+from mots_rl.baselines.dim_affect import DimAffectBaseline
+from mots_rl.baselines.rl2 import RL2Baseline
 
 
 def create_env(env_name):
@@ -65,6 +71,43 @@ def main():
         obs_dim = env.observation_space.shape[0]
     else:
         obs_dim = env.observation_space.n
+    
+    baseline_type = config.get("baseline_type", None)
+    
+    if baseline_type:
+        print(f"Training baseline: {baseline_type}")
+        
+        if baseline_type == "vanilla":
+            baseline = VanillaRLBaseline(env, config.policy_type, device, config.get("lr", 3e-4))
+        elif baseline_type == "vanilla_plus":
+            baseline = VanillaPlusBaseline(env, config.policy_type, device, config.get("lr", 3e-4))
+        elif baseline_type == "icm":
+            baseline = ICMBaseline(env, config.policy_type, device, config.get("lr", 3e-4), config.get("intrinsic_coef", 0.01))
+        elif baseline_type == "rnd":
+            baseline = RNDBaseline(env, config.policy_type, device, config.get("lr", 3e-4), config.get("intrinsic_coef", 0.01))
+        elif baseline_type == "dim_affect":
+            baseline = DimAffectBaseline(env, config.policy_type, device, config.get("lr", 3e-4))
+        elif baseline_type == "rl2":
+            baseline = RL2Baseline(env, config.policy_type, device, config.get("lr", 3e-4))
+        else:
+            raise ValueError(f"Unknown baseline type: {baseline_type}")
+        
+        log_dir = Path(config.get("log_dir", "results/default"))
+        log_dir.mkdir(parents=True, exist_ok=True)
+        
+        results = baseline.train(
+            total_timesteps=config.total_timesteps,
+            num_seeds=config.num_seeds
+        )
+        
+        import pickle
+        results_file = log_dir / "training_results.pkl"
+        with open(results_file, "wb") as f:
+            pickle.dump(results, f)
+        
+        env.close()
+        print(f"Training complete. Results saved to {log_dir}")
+        return
     
     core = CoreAffectiveDynamics(
         input_dim=obs_dim,

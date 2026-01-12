@@ -15,6 +15,7 @@ eval-all:
 	python scripts/eval_boundedness.py
 	python scripts/eval_cluster.py
 	python scripts/eval_counterfactual.py
+	python scripts/compare_baselines.py
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +

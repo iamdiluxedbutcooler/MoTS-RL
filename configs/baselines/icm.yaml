@@ -1,0 +1,13 @@
+env_name: "CartPole-v1"
+policy_type: "ppo"
+total_timesteps: 100000
+num_seeds: 20
+lr: 0.0003
+gamma: 0.99
+
+baseline_type: "icm"
+intrinsic_coef: 0.01
+
+device: "cpu"
+log_dir: "results/baselines/icm"
+use_wandb: false

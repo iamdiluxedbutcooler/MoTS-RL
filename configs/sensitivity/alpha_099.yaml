@@ -1,0 +1,21 @@
+env_name: "MiniGrid-Empty-8x8-v0"
+policy_type: "ppo"
+total_timesteps: 500000
+num_seeds: 20
+lr: 0.0003
+gamma: 0.99
+lambda_kl: 0.01
+window_size: 1000
+
+alpha: [0.99, 0.99, 0.99, 0.99]
+beta: [0.01, 0.01, 0.01, 0.01]
+
+ego_mode: "mlp"
+num_experts: 3
+hidden_dim: 64
+
+sensitivity_test: "alpha_099"
+
+device: "cpu"
+log_dir: "results/sensitivity/alpha_099"
+use_wandb: false
