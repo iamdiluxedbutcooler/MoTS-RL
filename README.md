@@ -1,6 +1,9 @@
 # Persona, Ego, Shadow, and Self: A Map of the Soul Framework for Proto-Emotional Homeostasis in AI
 
-**AAAI-26 Undergraduate Consortium Submission**
+**Accepted to AAAI-26 Undergraduate Consortium**
+
+📄 [View the paper](https://ojs.aaai.org/index.php/AAAI/article/view/42319)
+
 
 ## Overview
 
@@ -292,12 +295,17 @@ After running `python scripts/evaluate.py`, figures are saved to `results/figure
 ## Citation
 
 ```bibtex
-@inproceedings{litchiowong2026persona,
-  title={Persona, Ego, Shadow, and Self: A Map of the Soul Framework for Proto-Emotional Homeostasis in AI},
-  author={Litchiowong, Napassorn},
-  institution={National University of Singapore},
-  booktitle={AAAI Conference on Artificial Intelligence - Undergraduate Consortium},
-  year={2026}
+@article{Litchiowong_2026,
+    title     = {Persona, Ego, Shadow, and Self: A Map of the Soul Framework for Proto-Emotional Homeostasis in AI},
+    author    = {Litchiowong, Napassorn},
+    journal   = {Proceedings of the AAAI Conference on Artificial Intelligence},
+    volume    = {40},
+    number    = {48},
+    pages     = {41498--41500},
+    year      = {2026},
+    month     = mar,
+    doi       = {10.1609/aaai.v40i48.42319},
+    url       = {https://ojs.aaai.org/index.php/AAAI/article/view/42319},
 }
 ```
 
